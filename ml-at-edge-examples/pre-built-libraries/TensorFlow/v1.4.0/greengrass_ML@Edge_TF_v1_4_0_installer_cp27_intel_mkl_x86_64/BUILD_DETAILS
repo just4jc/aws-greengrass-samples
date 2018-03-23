@@ -1,0 +1,47 @@
+arch: x86_64 (AWS Deeplens with Intel Atom CPU) 
+OS: Ubuntu OS-16.04 LTS
+bazel: 0.9.0
+tf branch: v1.4.0
+python: 2.7
+mkl release: "mklml_lnx_2018.0.20170425"
+
+-------------------
+
+configuration output (".tf_configure.bazelrc" file):
+
+build --action_env PYTHON_BIN_PATH="/usr/bin/python"
+build --action_env PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages"
+build --define PYTHON_BIN_PATH="/usr/bin/python"
+build --define PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages"
+build --force_python=py2
+build --host_force_python=py2
+build --python_path="/usr/bin/python"
+test --force_python=py2
+test --host_force_python=py2
+test --define PYTHON_BIN_PATH="/usr/bin/python"
+test --define PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages"
+run --define PYTHON_BIN_PATH="/usr/bin/python"
+run --define PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages"
+build --define with_jemalloc=true
+build:gcp --define with_gcp_support=true
+build:hdfs --define with_hdfs_support=true
+build:s3 --define with_s3_support=true
+build:xla --define with_xla_support=true
+build:gdr --define with_gdr_support=true
+build:verbs --define with_verbs_support=true
+build --action_env TF_NEED_OPENCL="0"
+build --action_env TF_NEED_CUDA="0"
+build --action_env TF_MKL_ROOT=$BUILD_DIR/tmp/intel/mklml_lnx_2018.0.20170425"
+build --action_env TF_DOWNLOAD_MK=0
+build:opt --cxxopt=-march=native --copt=-march=native
+build:mkl --define using_mkl=true
+build:mkl -c opt
+build:mkl --copt="-DEIGEN_USE_VML"
+build:monolithic --define framework_shared_object=false
+build --define framework_shared_object=true
+
+-------------------
+
+bazel command:
+
+bazel build --config=mkl -c opt --verbose_failures --copt="-DEIGEN_USE_MKL_VML" --incompatible_load_argument_is_label=false //tensorflow/tools/pip_package:build_pip_package
