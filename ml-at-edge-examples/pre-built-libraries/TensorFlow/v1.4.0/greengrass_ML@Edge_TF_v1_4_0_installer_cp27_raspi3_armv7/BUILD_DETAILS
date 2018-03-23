@@ -1,0 +1,44 @@
+arch: armv7l
+gcc: (Raspbian 4.9.2-10) 4.9.2
+bazel: 0.5.4
+tf branch: v1.4.0
+python: 2.7
+
+-------------------
+
+configuration output (".tf_configure.bazelrc" file):
+
+build --action_env PYTHON_BIN_PATH="/usr/bin/python"
+build --action_env PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages"
+build --define PYTHON_BIN_PATH="/usr/bin/python"
+build --define PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages"
+build --force_python=py2
+build --host_force_python=py2
+build --python_path="/usr/bin/python"
+test --force_python=py2
+test --host_force_python=py2
+test --define PYTHON_BIN_PATH="/usr/bin/python"
+test --define PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages"
+run --define PYTHON_BIN_PATH="/usr/bin/python"
+run --define PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages"
+build --define with_jemalloc=true
+build:gcp --define with_gcp_support=true
+build:hdfs --define with_hdfs_support=true
+build:s3 --define with_s3_support=true
+build:xla --define with_xla_support=true
+build:gdr --define with_gdr_support=true
+build:verbs --define with_verbs_support=true
+build --action_env TF_NEED_OPENCL="0"
+build --action_env TF_NEED_CUDA="0"
+build:opt --cxxopt=-march=native --copt=-march=native
+build:mkl --define using_mkl=true
+build:mkl -c opt
+build:mkl --copt="-DEIGEN_USE_VML"
+build:monolithic --define framework_shared_object=false
+build --define framework_shared_object=true
+
+-------------------
+
+bazel command:
+
+bazel build -c opt --copt="-mfpu=neon-vfpv4" --copt="-funsafe-math-optimizations" --copt="-ftree-vectorize" --copt="-fomit-frame-pointer" --local_resources 1024,1.0,1.0 --verbose_failures tensorflow/tools/pip_package:build_pip_package
