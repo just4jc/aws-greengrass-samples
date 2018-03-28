@@ -71,7 +71,7 @@ if [ "$UNITTESTS" = "Y" ]; then
     tar xzvf mxnet-python-tests-common.tar.gz || (echo "Unable to untar MXNET test commons. Exiting..." && exit)
 
     cd tests/python/unittest
-     nosetests --verbosity=3
+    nosetests --verbosity=3
 
     if [[ $? -ne 0 ]]; then
         echo "WARNING: Some of MXNET unittests failed on this device. We strongly encourage you to get a full pass for all of the unittests before starting to use MXNET module in your GGC lambdas."
@@ -79,6 +79,7 @@ if [ "$UNITTESTS" = "Y" ]; then
         echo "CPU unittests succeeded! Starting GPU tests..."
         cd ../gpu
         nosetests --verbosity=3
+    fi
 
     if [[ $? -ne 0 ]]; then
         echo "WARNING: Some of MXNET GPU tests failed on this device. We strongly encourage you to get a full pass for all of the tests before starting to use MXNET module in your GGC lambdas."
